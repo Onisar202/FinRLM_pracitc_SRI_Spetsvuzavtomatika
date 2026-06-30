@@ -2,19 +2,15 @@ import json
 from src.finrlm.index.chunking import chunk_corpus
 from src.finrlm.index.embed import embed_chunks
 from src.finrlm.index.store import create_collection, upsert_chunks
-from src.finrlm.search import search
-from src.finrlm.rerank import rerank
-from src.finrlm.rag.generate import generate1
+from src.finrlm.agent.graph import run_agent
 
 
 def main():
-    docs = search("Газпром дивиденды 2026", limit=20)
-    top = rerank("Газпром дивиденды 2026", docs, top_k=5)
+
+    answer = run_agent("Газпром дивиденды 2026")
+    print(answer)
 
     
-
-    answer = generate1("Газпром дивиденды 2026", top)
-    print(answer)
     
 def index():
     
