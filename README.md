@@ -1,0 +1,1 @@
+FinRLM(rag for vocab data + rlm for inference) for financie news
