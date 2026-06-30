@@ -8,11 +8,13 @@ dependencies = [
     "fastapi>=0.138.2",
     "feedparser>=6.0.12",
     "flagembedding>=1.4.0",
+    "langdetect>=1.0.9",
     "langgraph>=1.2.6",
     "openai>=2.44.0",
     "qdrant-client>=1.18.0",
     "ragas>=0.4.3",
     "rlms",
+    "trafilatura>=2.1.0",
 ]
 
 [tool.uv.sources]
