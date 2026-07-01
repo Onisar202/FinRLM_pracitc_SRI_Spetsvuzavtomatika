@@ -1,12 +1,13 @@
 from openai import OpenAI
 from src.finrlm.search import Doc
+from src.finrlm.config import VLLM_BASE_URL, LLM_MODEL
 
 _client: OpenAI | None = None
 
 def _get_llm() -> OpenAI:
     global _client
     if _client is None:
-        _client = OpenAI(base_url="http://localhost:8000/v1", api_key="dummy")
+        _client = OpenAI(base_url=VLLM_BASE_URL, api_key="dummy")
     return _client
 
 def _build_context(docs: list[Doc]) -> str:
@@ -29,7 +30,7 @@ def generate(query: str, docs: list[Doc]) -> str:
 Ответ:"""
 
     response = _get_llm().chat.completions.create(
-        model="finrlm-llm",
+        model=LLM_MODEL,
         messages=[{"role": "user", "content": prompt}],
         temperature=0.1,
         max_tokens=1024,

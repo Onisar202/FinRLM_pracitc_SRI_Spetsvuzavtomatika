@@ -1,0 +1,62 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+  vllm:
+    image: vllm/vllm-openai:v0.10.2
+    ports:
+      - "8000:8000"
+    ipc: host                       # нужно vLLM для shared memory
+    volumes:
+      - hf_cache:/root/.cache/huggingface
+    environment:
+      - HF_TOKEN=${HF_TOKEN:-}
+      # V0-движок: V1 в свежих версиях требует UVA/pinned-память, недоступную
+      # в контейнере поверх WSL2 (Docker Desktop). Поэтому образ v0.10.2 — где V0 ещё есть.
+      - VLLM_USE_V1=0
+    # Флаги подобраны под RTX 3070 (8 ГБ, ~1 ГБ держит рабочий стол Windows):
+    # --enforce-eager + --max-num-seqs 1 + util 0.86 освобождают память под KV-кэш.
+    # Модель/квантизацию сверь со своим start_vllm.sh.
+    command: >
+      --model Qwen/Qwen3-8B-AWQ
+      --served-model-name finrlm-llm
+      --max-model-len 6144
+      --quantization awq_marlin
+      --kv-cache-dtype fp8
+      --gpu-memory-utilization 0.86
+      --enforce-eager
+      --max-num-seqs 1
+      --enable-auto-tool-choice
+      --tool-call-parser hermes
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  app:
+    build: .
+    ports:
+      - "8501:8501"
+    depends_on:
+      - qdrant
+      - vllm
+    environment:
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - VLLM_BASE_URL=http://vllm:8000/v1
+      - LLM_MODEL=finrlm-llm
+    volumes:
+      - hf_cache_app:/app/.hf_cache   # кэш BGE-M3 + reranker (~4.4 ГБ)
+      - ./data:/app/data              # news.jsonl между ingest и index
+
+volumes:
+  qdrant_data:
+  hf_cache:
+  hf_cache_app:

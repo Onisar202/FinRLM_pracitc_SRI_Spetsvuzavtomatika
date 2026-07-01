@@ -1,8 +1,6 @@
 import sys
 import json
 
-# RLM печатает verbose-вывод через rich; под Windows-консолью (cp1251) это падает
-# на юникод-символах рамок — принудительно переводим потоки в UTF-8.
 for _stream in (sys.stdout, sys.stderr):
     if hasattr(_stream, "reconfigure"):
         _stream.reconfigure(encoding="utf-8")

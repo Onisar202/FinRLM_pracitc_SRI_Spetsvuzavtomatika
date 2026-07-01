@@ -43,6 +43,3 @@ def clean_doc(doc: dict) -> dict | None:
         return None
 
     return {**doc, "text": text, "lang": lang}
-
-
-

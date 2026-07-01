@@ -10,8 +10,6 @@ _model = None
 def _load():
     global _tokenizer, _model
     if _model is None:
-        # AutoTokenizer грузит fast-токенизатор (XLMRobertaTokenizerFast),
-        # это обходит баг FlagReranker с prepare_for_model.
         _tokenizer = AutoTokenizer.from_pretrained(_MODEL_NAME)
         _model = AutoModelForSequenceClassification.from_pretrained(_MODEL_NAME)
         _model.eval()

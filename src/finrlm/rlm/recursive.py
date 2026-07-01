@@ -5,6 +5,7 @@ from rlm.core.rlm import RLM
 from src.finrlm.search import search as _search_fn
 from src.finrlm.rerank import rerank as _rerank_fn
 from src.finrlm.rag.generate import generate as _generate_fn
+from src.finrlm.config import VLLM_BASE_URL, LLM_MODEL
 
 
 _last_sources: list[dict] = []
@@ -44,8 +45,6 @@ _warmed = False
 
 
 def _warmup() -> None:
-    # Прогреваем модели (BGE-M3 + reranker) один раз до старта RLM, чтобы прогресс-бары
-    # загрузки весов не попадали в вывод rag_search и не сбивали агента.
     global _warmed
     if _warmed:
         return
@@ -69,8 +68,8 @@ def run_rlm(query: str) -> str:
     rlm = RLM(
         backend="openai",
         backend_kwargs={
-            "model_name": "finrlm-llm",
-            "base_url": "http://localhost:8000/v1",
+            "model_name": LLM_MODEL,
+            "base_url": VLLM_BASE_URL,
             "api_key": "dummy"
         },
         environment="local",

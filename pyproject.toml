@@ -12,8 +12,17 @@ dependencies = [
     "qdrant-client>=1.18.0",
     "rlms",
     "streamlit>=1.40.0",
+    "torch",
     "trafilatura>=2.1.0",
 ]
 
 [tool.uv.sources]
 rlms = { git = "https://github.com/alexzhang13/rlm.git" }
+# torch считается только на CPU (BGE-M3 + reranker), GPU держит отдельный vLLM —
+# берём CPU-сборку, это убирает ~5 ГБ CUDA-зависимостей из окружения и образа.
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true

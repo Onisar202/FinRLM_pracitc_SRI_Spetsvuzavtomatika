@@ -3,6 +3,8 @@ import os
 
 from qdrant_client import QdrantClient, models
 
+from src.finrlm.config import QDRANT_HOST, QDRANT_PORT
+
 os.environ.setdefault("NO_PROXY", "localhost,127.0.0.1")
 os.environ.setdefault("no_proxy", "localhost,127.0.0.1")
 
@@ -22,7 +24,7 @@ def save_docs(docs: list[dict], path: str) -> None:
 def get_client() -> QdrantClient:
     global _client
     if _client is None:
-        _client = QdrantClient(host="localhost", port=6333)
+        _client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
     return _client
 
 

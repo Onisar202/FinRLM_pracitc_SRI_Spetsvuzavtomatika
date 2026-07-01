@@ -3,7 +3,6 @@ import io
 import pathlib
 import contextlib
 
-
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 import streamlit as st
@@ -38,7 +37,7 @@ if st.button("Спросить", type="primary") and query.strip():
         with contextlib.redirect_stdout(trace):
             try:
                 answer = run_rlm(query.strip())
-            except Exception as e:  
+            except Exception as e:
                 error = e
         sources = get_last_sources()
 
