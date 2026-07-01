@@ -1,14 +1,12 @@
-
-
-def chunk_doc(doc: dict, chink_size: int = 512, overlap: int = 64) -> list[dict]:
+def chunk_doc(doc: dict, chunk_size: int = 512, overlap: int = 64) -> list[dict]:
     text = doc["text"]
-    chinks = []
+    chunks = []
     start = 0
     while start < len(text):
-        end = start + chink_size
+        end = start + chunk_size
         chunk_text = text[start:end]
-        chinks.append({
-            "id": f"{doc['id']}_c{len(chinks)}",
+        chunks.append({
+            "id": f"{doc['id']}_c{len(chunks)}",
             "doc_id": doc["id"],
             "url": doc["url"],
             "source": doc["source"],
@@ -19,9 +17,10 @@ def chunk_doc(doc: dict, chink_size: int = 512, overlap: int = 64) -> list[dict]
             "companies": doc["companies"],
             "tickers": doc["tickers"],
         })
-        start += chink_size - overlap
+        start += chunk_size - overlap
 
-    return chinks
+    return chunks
+
 
 def chunk_corpus(docs: list[dict]) -> list[dict]:
     result = []

@@ -1,6 +1,3 @@
-
-
-
 RSS_FEEDS = [
     {"url": "https://rssexport.rbc.ru/rbcnews/news/30/full.rss",                "source": "РБК", "lang": "ru"},
     {"url": "https://www.kommersant.ru/RSS/news.xml",                           "source": "Коммерсантъ", "lang": "ru"},

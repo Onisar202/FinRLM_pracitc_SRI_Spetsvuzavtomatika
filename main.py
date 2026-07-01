@@ -1,11 +1,24 @@
 import sys
 import json
-from src.finrlm.rlm.recursive import run_rlm
+
+# RLM печатает verbose-вывод через rich; под Windows-консолью (cp1251) это падает
+# на юникод-символах рамок — принудительно переводим потоки в UTF-8.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8")
+
+from src.finrlm.rlm.recursive import run_rlm, get_last_sources
 
 
 def run(query: str) -> None:
     answer = run_rlm(query)
     print(answer)
+
+    sources = get_last_sources()
+    if sources:
+        print("\nИсточники:")
+        for i, s in enumerate(sources, 1):
+            print(f"  [{i}] {s['source']} ({s['date']}): {s['url']}")
 
 
 def ingest() -> None:

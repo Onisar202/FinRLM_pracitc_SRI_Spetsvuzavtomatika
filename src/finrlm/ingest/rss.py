@@ -6,11 +6,11 @@ def fetch_feed(feed: dict) -> list[dict]:
     parsed = feedparser.parse(feed["url"])
     results = []
 
-    for enrty in parsed.entries:
-        url = enrty.get("link", "")
-        title = enrty.get("title", "")
-        text = enrty.get("summary")
-        pub = enrty.get("published_parsed")
+    for entry in parsed.entries:
+        url = entry.get("link", "")
+        title = entry.get("title", "")
+        text = entry.get("summary")
+        pub = entry.get("published_parsed")
         published_at = (
             datetime(*pub[:6], tzinfo=timezone.utc).isoformat()
             if pub else datetime.now(timezone.utc).isoformat()

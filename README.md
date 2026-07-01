@@ -31,8 +31,17 @@ RSS → clean → chunk → BGE-M3 (dense + sparse) → Qdrant (hybrid RRF)
 uv sync
 uv run main.py ingest                        # RSS → data/raw/news.jsonl
 uv run main.py index                         # эмбеддинги → Qdrant
-uv run main.py run "Газпром дивиденды 2026"   # RLM + RAG
+uv run main.py run "Газпром дивиденды 2026"   # RLM + RAG (CLI)
 ```
+
+### Веб-интерфейс
+
+```bash
+uv run streamlit run app/ui.py
+```
+
+Поле ввода → ответ с цитатами `[N]`; разворачивающийся блок «reasoning RLM»
+показывает пошаговый ход рассуждения (какие `rag_search` вызывались и что нашлось).
 
 Примеры вопросов:
 

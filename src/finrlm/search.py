@@ -8,7 +8,7 @@ _model: BGEM3FlagModel | None = None
 def _get_model() -> BGEM3FlagModel:
     global _model
     if _model is None:
-        _model = BGEM3FlagModel("BAAI/bge-m3", use_fp16=False, device="cpu")
+        _model = BGEM3FlagModel("BAAI/bge-m3", use_fp16=False, devices="cpu")
     return _model
 
 
