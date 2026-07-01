@@ -15,7 +15,7 @@ def _build_context(docs: list[Doc]) -> str:
         parts.append(f"[{i}] {doc.source} ({doc.published_at[:10]})\n{doc.title}\n{doc.text}")
     return "\n\n---\n\n".join(parts)
 
-def generate1(query: str, docs: list[Doc]) -> str:
+def generate(query: str, docs: list[Doc]) -> str:
     context = _build_context(docs)
     prompt = f"""Ты финансовый аналитик. Ответь на вопрос пользователя, опираясь только на предоставленные документы.
 После каждого утверждения указывай номер источника в квадратных скобках [N].

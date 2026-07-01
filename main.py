@@ -1,19 +1,36 @@
+import sys
 import json
-from src.finrlm.index.chunking import chunk_corpus
-from src.finrlm.index.embed import embed_chunks
-from src.finrlm.index.store import create_collection, upsert_chunks
-from src.finrlm.agent.graph import run_agent
 from src.finrlm.rlm.recursive import run_rlm
 
-def main():
 
-    # answer = run_agent("Газпром дивиденды 2026")
-    # print(answer)
-    print(run_rlm("Газпром дивиденды 2026"))
-    
-    
-def index():
-    
+def run(query: str) -> None:
+    answer = run_rlm(query)
+    print(answer)
+
+
+def ingest() -> None:
+    from src.finrlm.config import RSS_FEEDS
+    from src.finrlm.ingest.rss import fetch_feed
+    from src.finrlm.ingest.clean import clean_doc
+    from src.finrlm.index.store import save_docs
+
+    all_docs = []
+    for feed in RSS_FEEDS:
+        for doc in fetch_feed(feed):
+            cleaned = clean_doc(doc)
+            if cleaned is not None:
+                all_docs.append(cleaned)
+    print(f"Собрано: {len(all_docs)} документов")
+
+    save_docs(all_docs, "data/raw/news.jsonl")
+    print("Сохранено в data/raw/news.jsonl")
+
+
+def index() -> None:
+    from src.finrlm.index.chunking import chunk_corpus
+    from src.finrlm.index.embed import embed_chunks
+    from src.finrlm.index.store import create_collection, upsert_chunks
+
     docs = []
     with open("data/raw/news.jsonl", encoding="utf-8") as f:
         for line in f:
@@ -31,6 +48,13 @@ def index():
     print("Залито в Qdrant")
 
 
-
 if __name__ == "__main__":
-    main()
+    mode = sys.argv[1] if len(sys.argv) > 1 else "run"
+    query = " ".join(sys.argv[2:]) if len(sys.argv) > 2 else "Газпром дивиденды 2026"
+
+    if mode == "ingest":
+        ingest()
+    elif mode == "index":
+        index()
+    else:
+        run(query)
