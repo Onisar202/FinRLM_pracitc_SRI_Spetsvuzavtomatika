@@ -3,13 +3,13 @@ from src.finrlm.index.chunking import chunk_corpus
 from src.finrlm.index.embed import embed_chunks
 from src.finrlm.index.store import create_collection, upsert_chunks
 from src.finrlm.agent.graph import run_agent
-
+from src.finrlm.rlm.recursive import run_rlm
 
 def main():
 
-    answer = run_agent("Газпром дивиденды 2026")
-    print(answer)
-
+    # answer = run_agent("Газпром дивиденды 2026")
+    # print(answer)
+    print(run_rlm("Газпром дивиденды 2026"))
     
     
 def index():
